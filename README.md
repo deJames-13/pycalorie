@@ -20,6 +20,11 @@ python manage.py createsuperuser
 # View Template Files
 python manage.py collectstatic
 
+# Django help
+python manage.py help
+# Creating an app
+python manage.py startapp `nameofapp`
+
 
 # Theme Details
 https://app-generator.dev/docs/products/django-libs/theme-pixel.html 
