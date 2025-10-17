@@ -4,8 +4,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-
-    # Page from the theme 
+    """Render the PyCalorie home page."""
     return render(request, 'pages/index.html')
 
 def theme_docs(request):
