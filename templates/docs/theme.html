@@ -1,0 +1,657 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Django Pixel Theme Documentation{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row bg-primary text-white py-5">
+        <div class="col-12 text-center">
+            <h1 class="display-3 font-weight-bold mb-3">Django Pixel Theme</h1>
+            <p class="lead">A comprehensive UI component library built on Bootstrap</p>
+            <div class="mt-4">
+                <a href="https://github.com/deJames-13/pycalorie" class="btn btn-light btn-lg me-2" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://pypi.org/project/django-theme-pixel/" class="btn btn-outline-light btn-lg" target="_blank">
+                    <i class="fab fa-python"></i> PyPI
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <ul class="nav nav-pills justify-content-center mb-4" id="docTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#overview">Overview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#components">Components</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#utilities">Utilities</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#layout">Layout</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#vendors">Vendors</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-content" id="docTabsContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h2 class="h3 mb-4">About Django Pixel</h2>
+                            <p>Django Pixel is a modern, production-ready Bootstrap theme designed for Django applications. It provides a comprehensive set of UI components, utilities, and layouts.</p>
+                            
+                            <h3 class="h5 mt-4 mb-3">Key Features</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> 50+ Custom Components</li>
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Bootstrap 5 Based</li>
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Font Awesome Icons</li>
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Responsive Design</li>
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> SCSS Customization</li>
+                                <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> JavaScript Plugins Included</li>
+                            </ul>
+
+                            <h3 class="h5 mt-4 mb-3">Installation</h3>
+                            <pre class="bg-light p-3 rounded"><code>pip install django-theme-pixel</code></pre>
+
+                            <h3 class="h5 mt-4 mb-3">Resources</h3>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a href="https://app-generator.dev/docs/products/django/pixel/index.html" class="btn btn-sm btn-primary" target="_blank">Official Docs</a>
+                                <a href="https://github.com/deJames-13/pycalorie" class="btn btn-sm btn-secondary" target="_blank">Source Code</a>
+                                <a href="https://pypi.org/project/django-theme-pixel/" class="btn btn-sm btn-info" target="_blank">PyPI Package</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components Tab -->
+        <div class="tab-pane fade" id="components" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h3 mb-4">UI Components</h2>
+
+                    <!-- Buttons -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Buttons</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-primary me-2">Primary</button>
+                                <button class="btn btn-secondary me-2">Secondary</button>
+                                <button class="btn btn-success me-2">Success</button>
+                                <button class="btn btn-danger me-2">Danger</button>
+                                <button class="btn btn-warning me-2">Warning</button>
+                                <button class="btn btn-info me-2">Info</button>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline-primary me-2">Outline Primary</button>
+                                <button class="btn btn-outline-secondary me-2">Outline Secondary</button>
+                                <button class="btn btn-lg btn-primary me-2">Large</button>
+                                <button class="btn btn-sm btn-primary">Small</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Alerts</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-primary" role="alert">
+                                <i class="fas fa-info-circle me-2"></i> This is a primary alert
+                            </div>
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle me-2"></i> This is a success alert
+                            </div>
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i> This is a warning alert
+                            </div>
+                            <div class="alert alert-danger mb-0" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i> This is a danger alert
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Cards</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Basic Card</h5>
+                                            <p class="card-text">This is a basic card component with text content.</p>
+                                            <a href="#" class="btn btn-primary btn-sm">Learn More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card text-white bg-primary">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Colored Card</h5>
+                                            <p class="card-text">Cards can have colored backgrounds.</p>
+                                            <a href="#" class="btn btn-light btn-sm">Learn More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Border Card</h5>
+                                            <p class="card-text">Cards with colored borders.</p>
+                                            <a href="#" class="btn btn-primary btn-sm">Learn More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Badges -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Badges</h3>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-primary me-2">Primary</span>
+                            <span class="badge bg-secondary me-2">Secondary</span>
+                            <span class="badge bg-success me-2">Success</span>
+                            <span class="badge bg-danger me-2">Danger</span>
+                            <span class="badge bg-warning text-dark me-2">Warning</span>
+                            <span class="badge bg-info me-2">Info</span>
+                            <span class="badge rounded-pill bg-primary me-2">Pill Badge</span>
+                        </div>
+                    </div>
+
+                    <!-- Breadcrumbs -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Breadcrumbs</h3>
+                        </div>
+                        <div class="card-body">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Library</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Data</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Avatars -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Avatars</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="avatar avatar-sm bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="avatar avatar-md bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-2" style="width: 48px; height: 48px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="avatar avatar-lg bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Forms -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Forms</h3>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Email address</label>
+                                    <input type="email" class="form-control" placeholder="name@example.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Select option</label>
+                                    <select class="form-select">
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                        <option>Option 3</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="check1">
+                                        <label class="form-check-label" for="check1">Remember me</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bars -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Progress Bars</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" style="width: 25%;">25%</div>
+                            </div>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 50%;">50%</div>
+                            </div>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;">75%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Pagination</h3>
+                        </div>
+                        <div class="card-body">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- List Groups -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">List Groups</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Basic list item</li>
+                                        <li class="list-group-item active">Active list item</li>
+                                        <li class="list-group-item">Another list item</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-home me-2"></i> Home
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action active">
+                                            <i class="fas fa-user me-2"></i> Profile
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-cog me-2"></i> Settings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Utilities Tab -->
+        <div class="tab-pane fade" id="utilities" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h3 mb-4">Utilities & Helpers</h2>
+
+                    <!-- Spacing -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Spacing Utilities</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Margin and padding utilities using Bootstrap's spacing scale (0-5):</p>
+                            <ul class="list-unstyled">
+                                <li><code>m-{0-5}</code> - Margin on all sides</li>
+                                <li><code>mt-{0-5}</code> - Margin top</li>
+                                <li><code>mb-{0-5}</code> - Margin bottom</li>
+                                <li><code>p-{0-5}</code> - Padding on all sides</li>
+                                <li><code>pt-{0-5}</code> - Padding top</li>
+                                <li><code>pb-{0-5}</code> - Padding bottom</li>
+                            </ul>
+                            <div class="alert alert-info">
+                                <strong>Example:</strong> <code>mt-3 mb-4 p-2</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shadows -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Shadow Utilities</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-white shadow-sm text-center">shadow-sm</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-white shadow text-center">shadow</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-white shadow-lg text-center">shadow-lg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Utilities -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Text Utilities</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-primary">Primary text</p>
+                            <p class="text-secondary">Secondary text</p>
+                            <p class="text-success">Success text</p>
+                            <p class="text-danger">Danger text</p>
+                            <p class="text-muted">Muted text</p>
+                            <p class="text-uppercase">Uppercase text</p>
+                            <p class="text-lowercase">LOWERCASE TEXT</p>
+                            <p class="text-capitalize mb-0">capitalized text</p>
+                        </div>
+                    </div>
+
+                    <!-- Background Utilities -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Background Utilities</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-primary text-white text-center">bg-primary</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-secondary text-white text-center">bg-secondary</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-success text-white text-center">bg-success</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-danger text-white text-center">bg-danger</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sizing -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Sizing Utilities</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="w-25 p-3 bg-light mb-2">Width 25%</div>
+                            <div class="w-50 p-3 bg-light mb-2">Width 50%</div>
+                            <div class="w-75 p-3 bg-light mb-2">Width 75%</div>
+                            <div class="w-100 p-3 bg-light">Width 100%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Tab -->
+        <div class="tab-pane fade" id="layout" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h3 mb-4">Layout Components</h2>
+
+                    <!-- Grid System -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Grid System</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-12"><div class="p-3 bg-light border">col-12</div></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6"><div class="p-3 bg-light border">col-6</div></div>
+                                <div class="col-6"><div class="p-3 bg-light border">col-6</div></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4"><div class="p-3 bg-light border">col-4</div></div>
+                                <div class="col-4"><div class="p-3 bg-light border">col-4</div></div>
+                                <div class="col-4"><div class="p-3 bg-light border">col-4</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navbar -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Navbar Component</h3>
+                        </div>
+                        <div class="card-body">
+                            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                                <div class="container-fluid">
+                                    <a class="navbar-brand" href="#">Brand</a>
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarExample">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarExample">
+                                        <ul class="navbar-nav ms-auto">
+                                            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Footer Layout</h3>
+                        </div>
+                        <div class="card-body">
+                            <footer class="bg-dark text-white p-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h5>About</h5>
+                                        <p class="small">Footer content goes here.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5>Links</h5>
+                                        <ul class="list-unstyled small">
+                                            <li><a href="#" class="text-white">Home</a></li>
+                                            <li><a href="#" class="text-white">About</a></li>
+                                            <li><a href="#" class="text-white">Contact</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5>Social</h5>
+                                        <div class="d-flex gap-3">
+                                            <a href="#" class="text-white"><i class="fab fa-facebook"></i></a>
+                                            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                                            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+
+                    <!-- Sections -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Section Layouts</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Pixel theme includes pre-styled section components with various backgrounds and spacing options.</p>
+                            <ul>
+                                <li>Hero sections with gradients</li>
+                                <li>Content sections with alternating backgrounds</li>
+                                <li>Feature sections with icons</li>
+                                <li>Call-to-action sections</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendors Tab -->
+        <div class="tab-pane fade" id="vendors" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h3 mb-4">Included Vendor Libraries</h2>
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">JavaScript Plugins</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Library</th>
+                                            <th>Purpose</th>
+                                            <th>Location</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Bootstrap</strong></td>
+                                            <td>Core framework for responsive design</td>
+                                            <td><code>vendor/bootstrap/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Font Awesome</strong></td>
+                                            <td>Icon library</td>
+                                            <td><code>vendor/@fortawesome/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Headroom.js</strong></td>
+                                            <td>Hide/show navbar on scroll</td>
+                                            <td><code>vendor/headroom.js/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Jarallax</strong></td>
+                                            <td>Parallax scrolling effects</td>
+                                            <td><code>vendor/jarallax/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>OnScreen</strong></td>
+                                            <td>Viewport detection for animations</td>
+                                            <td><code>vendor/onscreen/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Popper.js</strong></td>
+                                            <td>Tooltip & popover positioning</td>
+                                            <td><code>vendor/@popperjs/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Smooth Scroll</strong></td>
+                                            <td>Smooth scrolling for anchor links</td>
+                                            <td><code>vendor/smooth-scroll/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>VanillaJS Datepicker</strong></td>
+                                            <td>Date picker component</td>
+                                            <td><code>vendor/vanillajs-datepicker/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Vivus</strong></td>
+                                            <td>SVG animation library</td>
+                                            <td><code>vendor/vivus/</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Waypoints</strong></td>
+                                            <td>Trigger functions on scroll events</td>
+                                            <td><code>vendor/waypoints/</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">SCSS Structure</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Component Styles</h5>
+                            <ul class="list-unstyled mb-4">
+                                <li><i class="fas fa-folder text-warning me-2"></i> <code>scss/pixel/components/</code>
+                                    <ul class="mt-2">
+                                        <li>Accordions, Alerts, Avatars, Badges</li>
+                                        <li>Buttons, Cards, Carousels, Forms</li>
+                                        <li>Modals, Navbars, Pagination, Progress</li>
+                                        <li>Timelines, Tooltips, and more...</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <h5>Utility Styles</h5>
+                            <ul class="list-unstyled mb-4">
+                                <li><i class="fas fa-folder text-warning me-2"></i> <code>scss/pixel/utilities/</code>
+                                    <ul class="mt-2">
+                                        <li>Animations, Backgrounds, Floating</li>
+                                        <li>Positioning, Shadows, Sizing</li>
+                                        <li>Spacing, Text, Transforms</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <h5>Layout Styles</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-folder text-warning me-2"></i> <code>scss/pixel/layout/</code>
+                                    <ul class="mt-2">
+                                        <li>Footer, Headroom, Navbar, Sections</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="h5 mb-0">Customization</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>You can customize the theme by modifying:</p>
+                            <pre class="bg-light p-3 rounded mb-0"><code>staticfiles/scss/custom/_variables.scss</code></pre>
+                            <p class="mt-3 mb-0">Override any Bootstrap or Pixel variables to match your brand colors, typography, and spacing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
