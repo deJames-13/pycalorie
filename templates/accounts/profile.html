@@ -1,0 +1,134 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+    <main>
+        {% include 'includes/pre-loader.html' %}
+
+        <!-- Section -->
+        <section class="section-lg py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-8">
+                        <div class="card bg-white shadow-soft border p-4 p-lg-5 mb-4">
+                            <div class="card-header text-center border-bottom-0 pb-0">
+                                <div class="mb-3">
+                                    <div class="avatar avatar-xl">
+                                        <span class="avatar-initials bg-primary text-white">
+                                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <h3 class="h4 mb-1">{{ user.first_name }} {{ user.last_name }}</h3>
+                                <p class="text-muted">@{{ user.username }}</p>
+                            </div>
+                            
+                            <div class="card-body pt-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">First Name</label>
+                                            <div class="form-control-plaintext">{{ user.first_name|default:"Not provided" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">Last Name</label>
+                                            <div class="form-control-plaintext">{{ user.last_name|default:"Not provided" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">Username</label>
+                                            <div class="form-control-plaintext">{{ user.username }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">Email</label>
+                                            <div class="form-control-plaintext">{{ user.email|default:"Not provided" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">Date Joined</label>
+                                            <div class="form-control-plaintext">{{ user.date_joined|date:"F d, Y" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label">Last Login</label>
+                                            <div class="form-control-plaintext">
+                                                {% if user.last_login %}
+                                                    {{ user.last_login|date:"F d, Y g:i A" }}
+                                                {% else %}
+                                                    Never
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-top">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="#" class="btn btn-primary btn-sm me-2">
+                                                <span class="fas fa-edit me-1"></span>
+                                                Edit Profile
+                                            </a>
+                                            <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-secondary btn-sm">
+                                                <span class="fas fa-key me-1"></span>
+                                                Change Password
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6 text-md-end">
+                                            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger btn-sm">
+                                                <span class="fas fa-sign-out-alt me-1"></span>
+                                                Logout
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Health Goals Section (Future Enhancement) -->
+                        <div class="card bg-white shadow-soft border p-4 p-lg-5">
+                            <div class="card-header border-bottom-0 pb-0">
+                                <h4 class="h5 mb-0">Health Dashboard</h4>
+                                <p class="text-muted small">Track your health journey with PyCalorie</p>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="text-center py-4">
+                                    <div class="mb-3">
+                                        <span class="fas fa-chart-line fa-3x text-muted"></span>
+                                    </div>
+                                    <h5 class="text-muted">Coming Soon!</h5>
+                                    <p class="text-muted">
+                                        Your health dashboard with calorie tracking, meal planning, 
+                                        and fitness goals will be available here soon.
+                                    </p>
+                                    <a href="{% url 'index' %}" class="btn btn-primary">
+                                        <span class="fas fa-home me-1"></span>
+                                        Back to Home
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

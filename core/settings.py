@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     'theme_pixel',
     "home",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -165,4 +166,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Authentication settings
+AUTH_USER_MODEL = 'auth.User'  # Using Django's built-in User model
