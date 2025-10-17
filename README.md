@@ -4,7 +4,7 @@
 ```sh
 git clone <repository>
 venv env
-env/Scripts/activate # Windows
+# env/Scripts/activate # Windows
 source env/bin/activate # Linux/Mac
 
 # Configuring Migrations
