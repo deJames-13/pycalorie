@@ -17,6 +17,13 @@ python manage.py runserver
 # Creating User
 python manage.py createsuperuser
 
+# View Template Files
+python manage.py collectstatic
+
+
+# Theme Details
+https://app-generator.dev/docs/products/django-libs/theme-pixel.html 
+
 # Template Docs
 
 The UI is built with [Pixel Lite Template](https://app-generator.dev/docs/products/django/pixel/index.html), a simple yet elegant Bootstrap 5 design featuring:
