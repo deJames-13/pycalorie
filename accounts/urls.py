@@ -53,8 +53,10 @@ urlpatterns = [
          ),
          name='password_change_done'),
     
-    # Profile and account management (for future development)
+    # Profile and account management
     path('profile/', views.profile_view, name='profile'),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('onboarding/', views.onboarding_wizard, name='onboarding'),
     
     # Alternative function-based view URLs (commented out - use class-based above)
     # path('login/', views.login_view, name='login'),

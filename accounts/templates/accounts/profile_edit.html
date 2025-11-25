@@ -1,0 +1,214 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 mb-0">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </h2>
+            <p class="text-muted mt-2">Update your personal information and health goals</p>
+        </div>
+        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Profile
+        </a>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Please correct the following errors:</strong>
+                            <ul class="mb-0 mt-2">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endif %}
+
+                        <!-- Personal Information Section -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                        First Name <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                        Last Name <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.last_name }}
+                                </div>
+                                <div class="col-12">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        Email Address <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Biometric Data Section -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-heartbeat me-2 text-danger"></i>Biometric Data
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="{{ form.weight_kg.id_for_label }}" class="form-label">
+                                        {{ form.weight_kg.label }}
+                                    </label>
+                                    {{ form.weight_kg }}
+                                    <small class="form-text text-muted">Current: {{ profile.weight_kg|default:"Not set" }} kg</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="{{ form.height_cm.id_for_label }}" class="form-label">
+                                        {{ form.height_cm.label }}
+                                    </label>
+                                    {{ form.height_cm }}
+                                    <small class="form-text text-muted">Current: {{ profile.height_cm|default:"Not set" }} cm</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">
+                                        {{ form.date_of_birth.label }}
+                                    </label>
+                                    {{ form.date_of_birth }}
+                                    {% if profile.age %}
+                                    <small class="form-text text-muted">Age: {{ profile.age }} years</small>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.gender.id_for_label }}" class="form-label">
+                                        {{ form.gender.label }}
+                                    </label>
+                                    {{ form.gender }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.activity_level.id_for_label }}" class="form-label">
+                                        {{ form.activity_level.label }}
+                                    </label>
+                                    {{ form.activity_level }}
+                                    <small class="form-text text-muted d-block">
+                                        <i class="fas fa-info-circle"></i> This affects your daily calorie calculation
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Health Goals Section -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-bullseye me-2 text-success"></i>Health Goals
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.health_goal.id_for_label }}" class="form-label">
+                                        {{ form.health_goal.label }}
+                                    </label>
+                                    {{ form.health_goal }}
+                                    <small class="form-text text-muted d-block">
+                                        <i class="fas fa-info-circle"></i> Adjusts calorie goal for your objective
+                                    </small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.daily_calorie_goal.id_for_label }}" class="form-label">
+                                        {{ form.daily_calorie_goal.label }}
+                                    </label>
+                                    {{ form.daily_calorie_goal }}
+                                    <small class="form-text text-muted d-block">
+                                        {{ form.daily_calorie_goal.help_text }}
+                                    </small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.water_goal_liters.id_for_label }}" class="form-label">
+                                        {{ form.water_goal_liters.label }}
+                                    </label>
+                                    {{ form.water_goal_liters }}
+                                    <small class="form-text text-muted d-block">
+                                        {{ form.water_goal_liters.help_text }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Current Stats -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-chart-line me-2 text-info"></i>Current Stats
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-muted mb-1">BMI</h6>
+                                            <h4 class="mb-0">{{ profile.calculated_bmi|default:"--"|floatformat:1 }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-muted mb-1">Calorie Goal</h6>
+                                            <h4 class="mb-0">{{ profile.daily_calorie_goal|default:"--" }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-muted mb-1">Age</h6>
+                                            <h4 class="mb-0">{{ profile.age|default:"--" }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Note:</strong> These stats will be automatically recalculated when you save your changes.
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

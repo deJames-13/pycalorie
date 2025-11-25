@@ -1,0 +1,141 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Prediction Result</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">AI Prediction</h5>
+            </div>
+            <div class="card-body">
+                <h4>{{ prediction.predicted_food_name }}</h4>
+                <p class="text-muted">Based on: "{{ prediction.food_description }}"</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card border-primary mb-3">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Calories</h6>
+                                <h2 class="text-primary">{{ prediction.predicted_calories|floatformat:0 }}</h2>
+                                <small class="text-muted">kcal</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-info mb-3">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Quantity</h6>
+                                <h2 class="text-info">{{ prediction.predicted_quantity|floatformat:0 }}</h2>
+                                <small class="text-muted">grams</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h6 class="text-muted">Protein</h6>
+                            <h4>{{ prediction.predicted_protein|floatformat:1 }}g</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h6 class="text-muted">Carbs</h6>
+                            <h4>{{ prediction.predicted_carbs|floatformat:1 }}g</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h6 class="text-muted">Fat</h6>
+                            <h4>{{ prediction.predicted_fat|floatformat:1 }}g</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if prediction.confidence_score %}
+                <div class="mt-3">
+                    <label class="form-label">Confidence Score</label>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ prediction.confidence_score|floatformat:0 }}%"
+                             aria-valuenow="{{ prediction.confidence_score|floatformat:0 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ prediction.confidence_score|floatformat:0 }}%
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Add to Food Log</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="meal_id" class="form-label">Meal Type</label>
+                            <select class="form-select" id="meal_id" name="meal_id">
+                                <option value="">Select meal...</option>
+                                {% for meal in meals %}
+                                <option value="{{ meal.id }}">{{ meal.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity" class="form-label">Quantity (grams)</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" 
+                                   step="0.1" min="0" value="{{ prediction.predicted_quantity|floatformat:0 }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" 
+                                   value="{{ today|date:'Y-m-d' }}" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="time" class="form-label">Time</label>
+                            <input type="time" class="form-control" id="time" name="time" 
+                                   value="{{ now|time:'H:i' }}" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i> Add to Food Log
+                    </button>
+                    <a href="{% url 'dashboard:calorie_predict' %}" class="btn btn-secondary">Make Another Prediction</a>
+                    <a href="{% url 'dashboard:index' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">About AI Predictions</h6>
+                <p class="small text-muted">
+                    Our AI uses Google's Generative AI to analyze food descriptions and provide nutritional estimates.
+                    These predictions are estimates and should be used as a guide. For precise tracking, consider
+                    verifying with verified food database entries.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

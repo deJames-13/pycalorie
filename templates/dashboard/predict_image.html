@@ -1,0 +1,185 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}AI Food Scanner - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h3 mb-0">
+                    <i class="fas fa-camera me-2"></i>AI Food Scanner
+                </h2>
+                <a href="{% url 'pycalorie:image_gallery' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-images me-2"></i>View Gallery
+                </a>
+            </div>
+            <p class="text-muted mt-2">Upload a photo of your meal and let AI analyze the calories and nutritional content</p>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" id="imageUploadForm">
+                        {% csrf_token %}
+                        
+                        <!-- Image Preview Area -->
+                        <div class="text-center mb-4">
+                            <div id="imagePreview" class="mb-3" style="display: none;">
+                                <img id="previewImg" src="" alt="Preview" class="img-fluid rounded" style="max-height: 400px;">
+                            </div>
+                            
+                            <div id="uploadPlaceholder" class="p-5 border-2 border-dashed rounded" style="border-color: #e3e6e9;">
+                                <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">Drag & Drop Your Food Image</h5>
+                                <p class="text-muted mb-3">or click to browse</p>
+                            </div>
+                        </div>
+
+                        <!-- File Input (Hidden) -->
+                        <input 
+                            type="file" 
+                            name="food_image" 
+                            id="foodImage" 
+                            accept="image/*" 
+                            class="d-none" 
+                            required
+                            capture="environment"
+                        >
+
+                        <!-- Upload Button -->
+                        <div class="d-grid gap-2">
+                            <button type="button" id="selectImageBtn" class="btn btn-primary btn-lg">
+                                <i class="fas fa-image me-2"></i>Select Image
+                            </button>
+                            <button type="submit" id="analyzeBtn" class="btn btn-success btn-lg" style="display: none;">
+                                <i class="fas fa-brain me-2"></i>Analyze with AI
+                            </button>
+                            <button type="button" id="changeImageBtn" class="btn btn-outline-secondary" style="display: none;">
+                                <i class="fas fa-redo me-2"></i>Choose Different Image
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="card border-0 shadow mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>How It Works
+                    </h5>
+                    <ol class="mb-0">
+                        <li class="mb-2"><strong>Upload:</strong> Take a photo or select an image of your meal</li>
+                        <li class="mb-2"><strong>AI Analysis:</strong> Our AI identifies food items and estimates portions</li>
+                        <li class="mb-2"><strong>Auto-Detection:</strong> Meal type is automatically detected based on time</li>
+                        <li><strong>Save:</strong> Review and save directly to your daily log</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="alert alert-info mt-4">
+                <h6 class="alert-heading">
+                    <i class="fas fa-lightbulb me-2"></i>Tips for Best Results
+                </h6>
+                <ul class="mb-0 small">
+                    <li>Take photos in good lighting</li>
+                    <li>Include the entire plate in the frame</li>
+                    <li>Avoid blurry or dark images</li>
+                    <li>Separate food items are easier to identify</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('foodImage');
+    const selectBtn = document.getElementById('selectImageBtn');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const changeBtn = document.getElementById('changeImageBtn');
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const placeholder = document.getElementById('uploadPlaceholder');
+    const form = document.getElementById('imageUploadForm');
+
+    // Click to select image
+    selectBtn.addEventListener('click', () => fileInput.click());
+    placeholder.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    placeholder.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        placeholder.style.borderColor = '#0d6efd';
+        placeholder.style.backgroundColor = '#f8f9fa';
+    });
+
+    placeholder.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        placeholder.style.borderColor = '#e3e6e9';
+        placeholder.style.backgroundColor = 'transparent';
+    });
+
+    placeholder.addEventListener('drop', (e) => {
+        e.preventDefault();
+        placeholder.style.borderColor = '#e3e6e9';
+        placeholder.style.backgroundColor = 'transparent';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            displayPreview(files[0]);
+        }
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            displayPreview(e.target.files[0]);
+        }
+    });
+
+    // Display image preview
+    function displayPreview(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+            selectBtn.style.display = 'none';
+            analyzeBtn.style.display = 'block';
+            changeBtn.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Change image
+    changeBtn.addEventListener('click', () => {
+        fileInput.value = '';
+        preview.style.display = 'none';
+        placeholder.style.display = 'block';
+        selectBtn.style.display = 'block';
+        analyzeBtn.style.display = 'none';
+        changeBtn.style.display = 'none';
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', (e) => {
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing...';
+    });
+});
+</script>
+
+{% endblock %}

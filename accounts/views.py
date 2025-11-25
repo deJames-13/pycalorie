@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserProfileEditForm
 
 
 class CustomLoginView(LoginView):
@@ -39,11 +39,11 @@ class CustomLoginView(LoginView):
         return super().form_invalid(form)
     
     def get_success_url(self):
-        """Redirect to next page or home after login."""
+        """Redirect to next page or dashboard after login."""
         next_page = self.request.GET.get('next')
         if next_page:
             return next_page
-        return reverse_lazy('index')  # Redirect to home page
+        return reverse_lazy('dashboard:index')  # Redirect to dashboard
 
 
 class CustomLogoutView(LogoutView):
@@ -95,7 +95,7 @@ class SignUpView(CreateView):
                 f'Welcome to PyCalorie, {user.first_name}! Your account has been created successfully. '
                 'Let\'s start your health journey!'
             )
-            return redirect('index')  # Redirect to home page after signup
+            return redirect('accounts:onboarding')  # Redirect to onboarding first
         
         return response
     
@@ -127,10 +127,39 @@ def password_reset_view(request):
 
 @login_required
 def profile_view(request):
-    """User profile view (placeholder for future development)."""
-    return render(request, 'accounts/profile.html', {
-        'user': request.user
-    })
+    """User profile view - redirects to dashboard profile."""
+    return redirect('dashboard:profile')
+
+
+@login_required
+def profile_edit_view(request):
+    """
+    User profile edit view.
+    Allows users to update their personal information and biometric data.
+    """
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        form = UserProfileEditForm(request.POST, instance=profile, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Your profile has been updated successfully! '
+                f'Your new daily calorie goal is {profile.daily_calorie_goal} calories.'
+            )
+            return redirect('accounts:profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = UserProfileEditForm(instance=profile, user=request.user)
+    
+    context = {
+        'form': form,
+        'profile': profile,
+    }
+    
+    return render(request, 'accounts/profile_edit.html', context)
 
 
 # Function-based views as alternatives
@@ -156,7 +185,7 @@ def login_view(request):
                     request.session.set_expiry(0)  # Browser close
                 
                 messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-                return redirect(request.GET.get('next', 'index'))
+                return redirect(request.GET.get('next', 'dashboard:index'))
             else:
                 messages.error(request, 'Invalid credentials.')
         else:
@@ -186,7 +215,7 @@ def signup_view(request):
                     request, 
                     f'Welcome to PyCalorie, {user.first_name}! Your account has been created successfully.'
                 )
-                return redirect('index')
+                return redirect('dashboard:index')
         else:
             messages.error(request, 'Please correct the errors in the form.')
     else:
@@ -201,3 +230,58 @@ def logout_view(request):
         messages.success(request, 'You have been successfully logged out. See you next time!')
         logout(request)
     return redirect('index')
+
+
+@login_required
+def onboarding_wizard(request):
+    """
+    Onboarding wizard to collect user biometric data and calculate TDEE.
+    This runs after user signs up to set up their profile properly.
+    """
+    profile = request.user.profile
+    
+    # Redirect if already completed
+    if profile.is_onboarding_complete:
+        messages.info(request, 'You have already completed onboarding!')
+        return redirect('dashboard:index')
+    
+    if request.method == 'POST':
+        # Extract form data
+        weight_kg = request.POST.get('weight_kg')
+        height_cm = request.POST.get('height_cm')
+        date_of_birth = request.POST.get('date_of_birth')
+        gender = request.POST.get('gender')
+        activity_level = request.POST.get('activity_level')
+        health_goal = request.POST.get('health_goal')
+        
+        try:
+            # Update profile
+            profile.weight_kg = float(weight_kg)
+            profile.height_cm = float(height_cm)
+            profile.date_of_birth = date_of_birth
+            profile.gender = gender
+            profile.activity_level = activity_level
+            profile.health_goal = health_goal
+            
+            # Calculate goals
+            if profile.calculate_and_save_goals():
+                profile.is_onboarding_complete = True
+                profile.save()
+                
+                messages.success(
+                    request,
+                    f'Welcome! Your daily calorie goal is {profile.daily_calorie_goal} calories. '
+                    f'Your BMI is {profile.bmi}. Let\'s start tracking!'
+                )
+                return redirect('dashboard:index')
+            else:
+                messages.error(request, 'Please fill in all required fields.')
+        
+        except Exception as e:
+            messages.error(request, f'Error saving profile: {str(e)}')
+    
+    context = {
+        'profile': profile,
+    }
+    
+    return render(request, 'accounts/onboarding.html', context)

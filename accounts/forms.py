@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import UserProfile
 import re
 
 
@@ -220,3 +221,136 @@ class PasswordResetForm(forms.Form):
         if email and not User.objects.filter(email=email).exists():
             raise ValidationError("No account found with this email address.")
         return email
+
+
+class UserProfileEditForm(forms.ModelForm):
+    """Form for editing user profile information."""
+    
+    first_name = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'First Name'
+        })
+    )
+    
+    last_name = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Last Name'
+        })
+    )
+    
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email Address'
+        })
+    )
+    
+    class Meta:
+        model = UserProfile
+        fields = [
+            'weight_kg', 'height_cm', 'date_of_birth', 'gender',
+            'activity_level', 'health_goal', 'daily_calorie_goal',
+            'water_goal_liters'
+        ]
+        widgets = {
+            'weight_kg': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Weight in kg',
+                'step': '0.1',
+                'min': '20',
+                'max': '300'
+            }),
+            'height_cm': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Height in cm',
+                'step': '0.1',
+                'min': '100',
+                'max': '250'
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }),
+            'gender': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'activity_level': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'health_goal': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'daily_calorie_goal': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Daily Calorie Goal',
+                'min': '1200',
+                'max': '5000'
+            }),
+            'water_goal_liters': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Water Goal (Liters)',
+                'step': '0.1',
+                'min': '0.5',
+                'max': '10'
+            }),
+        }
+        labels = {
+            'weight_kg': 'Weight (kg)',
+            'height_cm': 'Height (cm)',
+            'date_of_birth': 'Date of Birth',
+            'gender': 'Gender',
+            'activity_level': 'Activity Level',
+            'health_goal': 'Health Goal',
+            'daily_calorie_goal': 'Daily Calorie Goal (optional - auto-calculated)',
+            'water_goal_liters': 'Daily Water Goal (Liters)',
+        }
+        help_texts = {
+            'daily_calorie_goal': 'Leave blank to auto-calculate based on your biometrics and goals',
+            'water_goal_liters': 'Recommended: 2-3 liters per day',
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        # Pre-populate user fields
+        if self.user:
+            self.fields['first_name'].initial = self.user.first_name
+            self.fields['last_name'].initial = self.user.last_name
+            self.fields['email'].initial = self.user.email
+    
+    def clean_email(self):
+        """Validate email uniqueness (excluding current user)."""
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exclude(pk=self.user.pk).exists():
+            raise ValidationError("An account with this email already exists.")
+        return email
+    
+    def save(self, commit=True):
+        """Save both User and UserProfile."""
+        profile = super().save(commit=False)
+        
+        # Update User model fields
+        if self.user:
+            self.user.first_name = self.cleaned_data['first_name']
+            self.user.last_name = self.cleaned_data['last_name']
+            self.user.email = self.cleaned_data['email']
+            if commit:
+                self.user.save()
+        
+        # Recalculate goals if biometrics changed
+        if commit:
+            profile.save()
+            
+            # Only auto-calculate if daily_calorie_goal is not manually set
+            if not self.cleaned_data.get('daily_calorie_goal'):
+                profile.calculate_and_save_goals()
+        
+        return profile

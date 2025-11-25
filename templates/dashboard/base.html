@@ -1,0 +1,161 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block header %}
+<style>
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        overflow-y: auto;
+    }
+
+    .sidebar .nav-link {
+        font-weight: 500;
+        color: #333;
+        padding: 0.75rem 1rem;
+        border-radius: 0.25rem;
+        margin: 0.125rem 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #0d6efd;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .sidebar .nav-link i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .sidebar small.text-muted {
+        font-weight: 600;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        display: block;
+        margin-top: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .sidebar {
+            position: relative;
+            padding: 1rem 0;
+        }
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}"
+                            href="{% url 'dashboard:index' %}">
+                            <i class="fas fa-chart-line me-2"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <!-- Food Logging Section -->
+                    <li class="nav-item mt-2">
+                        <small class="text-muted ps-3">FOOD TRACKING</small>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'food_log' %}active{% endif %}"
+                            href="{% url 'pycalorie:food_log' %}">
+                            <i class="fas fa-utensils me-2"></i> Log Food
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'predict_from_image' %}active{% endif %}"
+                            href="{% url 'pycalorie:predict_from_image' %}">
+                            <i class="fas fa-camera me-2"></i> AI Scanner
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'predict_from_text' %}active{% endif %}"
+                            href="{% url 'pycalorie:predict_from_text' %}">
+                            <i class="fas fa-brain me-2"></i> AI Text Predict
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'food_log_history' %}active{% endif %}"
+                            href="{% url 'pycalorie:food_log_history' %}">
+                            <i class="fas fa-history me-2"></i> Food History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'image_gallery' %}active{% endif %}"
+                            href="{% url 'pycalorie:image_gallery' %}">
+                            <i class="fas fa-images me-2"></i> Photo Gallery
+                        </a>
+                    </li>
+
+                    <!-- Analytics Section -->
+                    <li class="nav-item mt-3">
+                        <small class="text-muted ps-3">ANALYTICS</small>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+                            href="{% url 'pycalorie:analytics' %}">
+                            <i class="fas fa-chart-bar me-2"></i> Reports
+                        </a>
+                    </li>
+
+                    <!-- User Section -->
+                    <li class="nav-item mt-3">
+                        <small class="text-muted ps-3">SETTINGS</small>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'profile' in request.path %}active{% endif %}"
+                            href="{% url 'accounts:profile' %}">
+                            <i class="fas fa-user me-2"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% block dashboard_content %}{% endblock %}
+            </div>
+        </main>
+
+        {% block footer %}
+
+
+        {% endblock footer %}
+    </div>
+</div>
+{% endblock %}

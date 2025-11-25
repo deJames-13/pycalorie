@@ -1,0 +1,148 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load pycalorie_filters %}
+
+{% block title %}Food Gallery - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="h3 mb-0">
+                        <i class="fas fa-images me-2"></i>Your Food Gallery
+                    </h2>
+                    <p class="text-muted mt-2">Instagram-style view of your logged meals</p>
+                </div>
+                <a href="{% url 'pycalorie:predict_from_image' %}" class="btn btn-primary">
+                    <i class="fas fa-camera me-2"></i>Add Photo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form method="get" class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="start_date" class="form-label small">From Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" 
+                                   value="{{ request.GET.start_date }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_date" class="form-label small">To Date</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" 
+                                   value="{{ request.GET.end_date }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="meal_type" class="form-label small">Meal Type</label>
+                            <select class="form-select" id="meal_type" name="meal_type">
+                                <option value="">All Meals</option>
+                                {% for meal in meals %}
+                                <option value="{{ meal.name }}" {% if selected_meal == meal.name %}selected{% endif %}>
+                                    {{ meal.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter me-2"></i>Filter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    {% if food_images %}
+    <div class="row g-3">
+        {% for food_image in food_images %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a href="{% url 'pycalorie:image_detail' food_image.id %}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100 food-card">
+                    <div class="position-relative">
+                        <!-- Image -->
+                        <img src="{{ food_image.thumbnail.url }}" 
+                             alt="{{ food_image.food_entry.food_name }}" 
+                             class="card-img-top"
+                             style="aspect-ratio: 1; object-fit: cover;">
+                        
+                        <!-- Overlay -->
+                        <div class="position-absolute bottom-0 start-0 end-0 p-2 text-white" 
+                             style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                            <div class="small fw-bold">{{ food_image.food_entry.food_name }}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">
+                                    {{ food_image.food_entry.calories|floatformat:0 }} cal
+                                </span>
+                                {% if food_image.food_entry.meal %}
+                                <span class="badge bg-secondary">
+                                    {{ food_image.food_entry.meal.name }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- AI Badge -->
+                        {% if food_image.ai_confidence %}
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success" title="AI Detected">
+                                <i class="fas fa-robot"></i> {{ food_image.ai_confidence|percentage }}%
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body p-2">
+                        <small class="text-muted">
+                            <i class="far fa-calendar me-1"></i>
+                            {{ food_image.food_entry.date|date:"M d, Y" }}
+                            <i class="far fa-clock ms-2 me-1"></i>
+                            {{ food_image.food_entry.time|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-image fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No Food Images Yet</h4>
+                <p class="text-muted mb-4">Start tracking your meals by uploading food photos</p>
+                <a href="{% url 'pycalorie:predict_from_image' %}" class="btn btn-primary">
+                    <i class="fas fa-camera me-2"></i>Upload First Photo
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+{{ block.super }}
+<style>
+.food-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.food-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+</style>
+{% endblock %}
