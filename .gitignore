@@ -6,7 +6,9 @@
 /docs/_build/
 /node_modules/
 build/
+.env
 env
+.venv
 /staticfiles/
 
 #src
@@ -14,3 +16,5 @@ env
 
 #.env
 node_modules
+.cursor
+.github

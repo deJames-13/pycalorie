@@ -1,0 +1,138 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Create Custom Food - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{% url 'pycalorie:food_log' %}" class="btn btn-sm btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to Log
+            </a>
+            <h2 class="h3">
+                <i class="fas fa-plus-circle me-2"></i>Create Custom Food
+            </h2>
+            <p class="text-muted">Add a reusable food item to the database</p>
+        </div>
+    </div>
+
+    <!-- Create Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Food Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Food Name *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="e.g., Chicken Breast"
+                                   required>
+                            <small class="form-text text-muted">
+                                Choose a clear, descriptive name
+                            </small>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="2"
+                                      placeholder="Additional details about the food"></textarea>
+                        </div>
+
+                        <!-- Serving Size -->
+                        <div class="mb-3">
+                            <label for="serving_size" class="form-label">Serving Size</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="serving_size" 
+                                   name="serving_size" 
+                                   value="100g"
+                                   placeholder="e.g., 100g, 1 cup">
+                            <small class="form-text text-muted">
+                                All nutrition values below should be per this serving size
+                            </small>
+                        </div>
+
+                        <!-- Nutritional Information -->
+                        <h5 class="mb-3">Nutritional Information (per serving)</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="calories_per_100g" class="form-label">Calories (kcal) *</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="calories_per_100g" 
+                                       name="calories_per_100g" 
+                                       step="0.1" 
+                                       min="0" 
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="protein_per_100g" class="form-label">Protein (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="protein_per_100g" 
+                                       name="protein_per_100g" 
+                                       step="0.1" 
+                                       min="0" 
+                                       value="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="carbs_per_100g" class="form-label">Carbohydrates (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="carbs_per_100g" 
+                                       name="carbs_per_100g" 
+                                       step="0.1" 
+                                       min="0" 
+                                       value="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="fat_per_100g" class="form-label">Fat (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="fat_per_100g" 
+                                       name="fat_per_100g" 
+                                       step="0.1" 
+                                       min="0" 
+                                       value="0">
+                            </div>
+                        </div>
+
+                        <!-- Info Alert -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Your custom food will be submitted for admin verification before appearing in search results for all users.
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-2"></i>Create Food
+                            </button>
+                            <a href="{% url 'pycalorie:food_log' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

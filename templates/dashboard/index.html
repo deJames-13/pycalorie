@@ -1,0 +1,480 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-calendar me-1"></i> {{ today|date:"M d, Y" }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Main Calorie Progress -->
+<div class="row mb-4">
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title mb-4">Today's Calorie Goal</h5>
+                <div class="position-relative d-inline-block mb-3">
+                    <canvas id="calorieProgress" width="200" height="200"></canvas>
+                    <div class="position-absolute top-50 start-50 translate-middle text-center">
+                        <h3 class="mb-0">{{ calorie_percentage|default:0|floatformat:0 }}%</h3>
+                        <small class="text-muted">of goal</small>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>{{ total_calories|floatformat:0 }}</strong> / {{ calorie_goal }} kcal</p>
+                    <p class="text-muted small mb-0">
+                        {% if calorie_remaining > 0 %}
+                            <span class="text-success">{{ calorie_remaining|floatformat:0 }} kcal remaining</span>
+                        {% else %}
+                            <span class="text-danger">{{ calorie_remaining|floatformat:0 }} kcal over goal</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Macronutrient Breakdown</h5>
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 bg-light rounded">
+                            <i class="fas fa-drumstick-bite fa-2x text-info mb-2"></i>
+                            <h4 class="mb-0">{{ total_protein|floatformat:1 }}g</h4>
+                            <p class="text-muted mb-2 small">Protein</p>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info" 
+                                     role="progressbar" 
+                                     style="width: {{ protein_percentage|default:0 }}%"
+                                     aria-valuenow="{{ protein_percentage|default:0 }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 bg-light rounded">
+                            <i class="fas fa-bread-slice fa-2x text-success mb-2"></i>
+                            <h4 class="mb-0">{{ total_carbs|floatformat:1 }}g</h4>
+                            <p class="text-muted mb-2 small">Carbs</p>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" 
+                                     role="progressbar" 
+                                     style="width: {{ carbs_percentage|default:0 }}%"
+                                     aria-valuenow="{{ carbs_percentage|default:0 }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded">
+                            <i class="fas fa-cheese fa-2x text-warning mb-2"></i>
+                            <h4 class="mb-0">{{ total_fat|floatformat:1 }}g</h4>
+                            <p class="text-muted mb-2 small">Fat</p>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" 
+                                     role="progressbar" 
+                                     style="width: {{ fat_percentage|default:0 }}%"
+                                     aria-valuenow="{{ fat_percentage|default:0 }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <canvas id="macroDonut" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Quick Actions</h5>
+                <div class="row g-2">
+                    <div class="col-sm-6 col-md-3">
+                        <a href="{% url 'dashboard:food_log' %}" class="btn btn-primary w-100 py-3">
+                            <i class="fas fa-utensils fa-2x mb-2 d-block"></i>
+                            Log Food Manually
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <a href="{% url 'dashboard:calorie_predict' %}" class="btn btn-info w-100 py-3">
+                            <i class="fas fa-brain fa-2x mb-2 d-block"></i>
+                            AI Text Prediction
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <a href="{% url 'pycalorie:predict_from_image' %}" class="btn btn-success w-100 py-3">
+                            <i class="fas fa-camera fa-2x mb-2 d-block"></i>
+                            AI Image Analysis
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <button class="btn btn-secondary w-100 py-3" onclick="addWater()">
+                            <i class="fas fa-tint fa-2x mb-2 d-block"></i>
+                            Add Water (250ml)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Today's Food Log and Weekly Chart -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Today's Food Log</h5>
+            </div>
+            <div class="card-body">
+                {% if today_entries %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Food</th>
+                                    <th>Meal</th>
+                                    <th class="text-end">Calories</th>
+                                    <th class="text-end">Protein</th>
+                                    <th class="text-end">Carbs</th>
+                                    <th class="text-end">Fat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in today_entries %}
+                                <tr>
+                                    <td><small>{{ entry.time|time:"H:i" }}</small></td>
+                                    <td>{{ entry.food.name }}</td>
+                                    <td>
+                                        {% if entry.meal %}
+                                            <span class="badge bg-secondary">{{ entry.meal.name }}</span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end"><strong>{{ entry.total_calories|floatformat:0 }}</strong></td>
+                                    <td class="text-end text-muted">{{ entry.total_protein|floatformat:1 }}g</td>
+                                    <td class="text-end text-muted">{{ entry.total_carbs|floatformat:1 }}g</td>
+                                    <td class="text-end text-muted">{{ entry.total_fat|floatformat:1 }}g</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th colspan="3">Total</th>
+                                    <th class="text-end">{{ total_calories|floatformat:0 }} kcal</th>
+                                    <th class="text-end">{{ total_protein|floatformat:1 }}g</th>
+                                    <th class="text-end">{{ total_carbs|floatformat:1 }}g</th>
+                                    <th class="text-end">{{ total_fat|floatformat:1 }}g</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No food entries for today.</p>
+                        <a href="{% url 'dashboard:food_log' %}" class="btn btn-primary">Start Logging Your Meals!</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Week at a Glance</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyMiniChart" height="200"></canvas>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted mb-3">Hydration Goal</h6>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-tint fa-2x text-info me-3"></i>
+                    <div class="flex-grow-1">
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-info" 
+                                 role="progressbar" 
+                                 style="width: {{ water_percentage|default:0 }}%"
+                                 aria-valuenow="{{ water_percentage|default:0 }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ water_consumed|default:0 }}ml
+                            </div>
+                        </div>
+                        <small class="text-muted">{{ water_consumed|default:0 }} / {{ water_goal|default:2000 }}ml</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Weekly Overview Chart -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Weekly Calorie Overview</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyChart" height="80"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Circular Calorie Progress
+    const calorieCtx = document.getElementById('calorieProgress');
+    if (calorieCtx) {
+        const percentage = {{ calorie_percentage|default:0 }};
+        const remaining = 100 - percentage;
+        
+        new Chart(calorieCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [percentage, remaining > 0 ? remaining : 0],
+                    backgroundColor: [
+                        percentage > 100 ? '#dc3545' : percentage > 80 ? '#ffc107' : '#198754',
+                        '#e9ecef'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Macro Donut Chart
+    const macroCtx = document.getElementById('macroDonut');
+    if (macroCtx) {
+        const protein = {{ total_protein|default:0 }};
+        const carbs = {{ total_carbs|default:0 }};
+        const fat = {{ total_fat|default:0 }};
+        
+        new Chart(macroCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Protein', 'Carbs', 'Fat'],
+                datasets: [{
+                    data: [protein, carbs, fat],
+                    backgroundColor: ['#0dcaf0', '#198754', '#ffc107'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + 'g';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Weekly Chart
+    const weeklyCtx = document.getElementById('weeklyChart');
+    if (weeklyCtx) {
+        const weeklyData = JSON.parse('{{ weekly_data|escapejs }}');
+        const labels = weeklyData.map(d => {
+            const date = new Date(d.date + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        });
+        const calories = weeklyData.map(d => d.calories);
+        const goals = weeklyData.map(d => d.goal);
+        
+        new Chart(weeklyCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Calories Consumed',
+                    data: calories,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }, {
+                    label: 'Daily Goal',
+                    data: goals,
+                    borderColor: '#dc3545',
+                    borderDash: [5, 5],
+                    borderWidth: 2,
+                    tension: 0.1,
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' kcal';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' kcal';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Weekly Mini Chart
+    const miniCtx = document.getElementById('weeklyMiniChart');
+    if (miniCtx) {
+        const weeklyData = JSON.parse('{{ weekly_data|escapejs }}');
+        const labels = weeklyData.map(d => {
+            const date = new Date(d.date + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
+        });
+        const calories = weeklyData.map(d => d.calories);
+        
+        new Chart(miniCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Daily Calories',
+                    data: calories,
+                    backgroundColor: '#0d6efd',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' kcal';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Add Water Function
+    function addWater() {
+        fetch("{% url 'pycalorie:add_water' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ amount: 250 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to add water: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to add water');
+        });
+    }
+</script>
+{% endblock %}
+

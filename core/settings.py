@@ -54,6 +54,9 @@ INSTALLED_APPS = [
 
     'theme_pixel',
     "home",
+    "accounts",
+    "pycalorie",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -156,6 +159,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Media files (User uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 #if not DEBUG:
 #    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -164,5 +171,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
+
+# Google GENAI Configuration
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', None)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Using Django's built-in User model with UserProfile extension
+# UserProfile is in accounts app and linked via OneToOne

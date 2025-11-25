@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">AI Calorie Prediction</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Predict Calories with AI</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Describe your food in natural language, and our AI will predict the calories and nutritional information.
+                    Examples: "a medium apple", "grilled chicken breast", "one cup of cooked rice"
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="food_description" class="form-label">Food Description</label>
+                        <textarea class="form-control" id="food_description" name="food_description" 
+                                  rows="3" placeholder="e.g., a medium apple" required></textarea>
+                        <div class="form-text">Be as specific as possible for better accuracy.</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-brain me-2"></i> Predict Calories
+                    </button>
+                    <a href="{% url 'dashboard:index' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Predictions</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_predictions %}
+                    <ul class="list-group list-group-flush">
+                        {% for prediction in recent_predictions %}
+                        <li class="list-group-item">
+                            <div>
+                                <strong>{{ prediction.predicted_food_name }}</strong><br>
+                                <small class="text-muted">{{ prediction.predicted_calories|floatformat:0 }} kcal</small>
+                                {% if prediction.confidence_score %}
+                                <br><small class="text-info">Confidence: {{ prediction.confidence_score|floatformat:0 }}%</small>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted text-center py-3">No predictions yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">Tips for Better Predictions</h6>
+                <ul class="small">
+                    <li>Include portion size (e.g., "medium", "1 cup")</li>
+                    <li>Mention cooking method (e.g., "grilled", "fried")</li>
+                    <li>Be specific about the food type</li>
+                    <li>Include brand names if relevant</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

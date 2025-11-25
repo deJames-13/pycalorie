@@ -1,0 +1,142 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Edit Food Entry - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{% url 'pycalorie:food_log_history' %}" class="btn btn-sm btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to History
+            </a>
+            <h2 class="h3">
+                <i class="fas fa-edit me-2"></i>Edit Food Entry
+            </h2>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Food Name -->
+                        <div class="mb-3">
+                            <label for="food_name" class="form-label">Food Name *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="food_name" 
+                                   name="food_name" 
+                                   value="{{ entry.food_name }}"
+                                   required>
+                        </div>
+
+                        <div class="row">
+                            <!-- Quantity -->
+                            <div class="col-md-6 mb-3">
+                                <label for="quantity" class="form-label">Quantity (grams) *</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="quantity" 
+                                       name="quantity" 
+                                       value="{{ entry.quantity }}"
+                                       step="0.1" 
+                                       min="0" 
+                                       required>
+                            </div>
+
+                            <!-- Meal Type -->
+                            <div class="col-md-6 mb-3">
+                                <label for="meal_id" class="form-label">Meal Type</label>
+                                <select class="form-select" id="meal_id" name="meal_id">
+                                    <option value="">Not Specified</option>
+                                    {% for meal in meals %}
+                                    <option value="{{ meal.id }}" 
+                                            {% if entry.meal_id == meal.id %}selected{% endif %}>
+                                        {{ meal.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Nutritional Information -->
+                        <h5 class="mb-3">Nutritional Information</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="calories" class="form-label">Calories (kcal)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="calories" 
+                                       name="calories" 
+                                       value="{{ entry.calories }}"
+                                       step="0.1" 
+                                       min="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="protein" class="form-label">Protein (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="protein" 
+                                       name="protein" 
+                                       value="{{ entry.protein }}"
+                                       step="0.1" 
+                                       min="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="carbs" class="form-label">Carbohydrates (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="carbs" 
+                                       name="carbs" 
+                                       value="{{ entry.carbs }}"
+                                       step="0.1" 
+                                       min="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="fat" class="form-label">Fat (g)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="fat" 
+                                       name="fat" 
+                                       value="{{ entry.fat }}"
+                                       step="0.1" 
+                                       min="0">
+                            </div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <label for="notes" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" 
+                                      id="notes" 
+                                      name="notes" 
+                                      rows="3">{{ entry.notes }}</textarea>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'pycalorie:food_log_history' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

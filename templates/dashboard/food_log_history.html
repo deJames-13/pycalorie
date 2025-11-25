@@ -1,0 +1,137 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Food Log History - PyCalorie{% endblock %}
+
+{% block dashboard_content %}
+<div class="py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="h3 mb-0">
+                        <i class="fas fa-history me-2"></i>Food Log History
+                    </h2>
+                    <p class="text-muted mt-2">{{ start_date|date:"M d, Y" }} - {{ end_date|date:"M d, Y" }}</p>
+                </div>
+                <a href="{% url 'pycalorie:food_log' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Log Food
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Range Selector -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group" role="group">
+                <a href="?days=7" class="btn btn-outline-primary {% if days == 7 %}active{% endif %}">
+                    Last 7 Days
+                </a>
+                <a href="?days=14" class="btn btn-outline-primary {% if days == 14 %}active{% endif %}">
+                    Last 14 Days
+                </a>
+                <a href="?days=30" class="btn btn-outline-primary {% if days == 30 %}active{% endif %}">
+                    Last 30 Days
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entries List -->
+    {% if entries %}
+    <div class="row">
+        <div class="col-12">
+            {% regroup entries by date as entries_by_date %}
+            {% for date_group in entries_by_date %}
+            <div class="card border-0 shadow mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="far fa-calendar me-2"></i>{{ date_group.grouper|date:"F d, Y" }}
+                        <span class="badge bg-primary float-end">
+                            {{ date_group.list|length }} entries
+                        </span>
+                    </h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for entry in date_group.list %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <h6 class="mb-1">
+                                    {{ entry.food_name }}
+                                    {% if entry.is_ai_generated %}
+                                    <span class="badge bg-success ms-1">
+                                        <i class="fas fa-robot"></i> AI
+                                    </span>
+                                    {% endif %}
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="far fa-clock me-1"></i>{{ entry.time|time:"g:i A" }}
+                                    {% if entry.meal %}
+                                    <span class="badge bg-secondary ms-2">{{ entry.meal.name }}</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-primary">{{ entry.calories|floatformat:0 }} cal</span>
+                                    <span class="badge bg-danger">P: {{ entry.protein|floatformat:1 }}g</span>
+                                    <span class="badge bg-warning text-dark">C: {{ entry.carbs|floatformat:1 }}g</span>
+                                    <span class="badge bg-success">F: {{ entry.fat|floatformat:1 }}g</span>
+                                </div>
+                                <small class="text-muted d-block mt-1">Qty: {{ entry.quantity|floatformat:0 }}g</small>
+                            </div>
+                            
+                            <div class="col-md-3 text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'pycalorie:edit_food_entry' entry.id %}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form method="post" action="{% url 'pycalorie:delete_food_entry' entry.id %}" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete this entry?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if entry.notes %}
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="fas fa-sticky-note me-1"></i>{{ entry.notes }}
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No Food Entries</h4>
+                <p class="text-muted mb-4">Start tracking your meals to see your history</p>
+                <a href="{% url 'pycalorie:food_log' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Log First Meal
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
